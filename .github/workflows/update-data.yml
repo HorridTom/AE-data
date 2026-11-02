@@ -29,17 +29,25 @@ jobs:
         with:
           cache-version: 1
 
-      # Temporary: shows what GitHub's servers get from an NHS England index
-      # page, to find out why no England files were found. Remove once fixed.
+      # Temporary: tries other ways of finding the NHS England file addresses,
+      # because the index pages return an empty "202" (a bot check) to GitHub's
+      # servers. Remove once fixed.
       - name: Check access to NHS England pages
         run: |
-          url="https://www.england.nhs.uk/statistics/statistical-work-areas/ae-waiting-times-and-activity/ae-attendances-and-emergency-admissions-2025-26/"
-          echo "--- curl"
-          curl -sS -L -o page.html -w "HTTP %{http_code}, %{size_download} bytes, final URL %{url_effective}\n" "$url" || true
-          echo "Lines mentioning xls: $(grep -c xls page.html || true)"
-          head -c 800 page.html; echo
-          echo "--- R"
-          Rscript -e 'cat("HTTPUserAgent:", getOption("HTTPUserAgent"), "\n"); x <- tryCatch(readLines(url(commandArgs(TRUE)[1])), error = function(e) {cat("Error:", conditionMessage(e), "\n"); character()}); cat(length(x), "lines,", sum(grepl("xls", x)), "mention xls\n"); cat(head(x, 8), sep = "\n")' "$url"
+          base="https://www.england.nhs.uk/statistics"
+          page="$base/statistical-work-areas/ae-waiting-times-and-activity/ae-attendances-and-emergency-admissions-2025-26/"
+          ua="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0 Safari/537.36"
+          try() {
+            echo "--- $1"
+            curl -sS -L -D headers.txt -o out.txt -w "HTTP %{http_code}, %{size_download} bytes\n" -A "$ua" "$2" || true
+            grep -i -E "^(server|x-amzn|x-cache|cf-|content-type)" headers.txt || true
+            echo "Mentions of AE-by-provider: $(grep -o "AE-by-provider[^\"]*" out.txt | sort -u | wc -l)"
+            grep -o "https://[^\"]*AE-by-provider[^\"]*" out.txt | sed 's#\\/#/#g' | sort -u | head -3
+          }
+          try "Index page, browser user agent" "$page"
+          try "WordPress API: media search" "$base/wp-json/wp/v2/media?search=AE-by-provider&per_page=100"
+          try "Index page feed" "${page}feed/"
+          try "Statistics search" "$base/?s=AE-by-provider"
 
       - name: Scrape and check the data
         run: Rscript update.R
