@@ -1,0 +1,14 @@
+Package: AEdata
+Title: Data Pipeline for the A&E Tracker
+Version: 0.1.0
+Authors@R: person("Thomas", "Woodcock", email = "thomas.woodcock99@imperial.ac.uk", role = c("aut", "cre"))
+Description: Not an R package. This file lists the packages the update
+    script needs, so that GitHub Actions can install them.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Imports:
+    dplyr,
+    jsonlite,
+    nhsAEscraper (>= 0.0.0.9017),
+    readr
+Remotes: HorridTom/nhsAEscraper
