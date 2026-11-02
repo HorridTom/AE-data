@@ -10,10 +10,22 @@ database on AWS and the AE-data-storage-app that maintained it.
 | `data/AE_Data_Scotland.csv` | Public Health Scotland weekly A&E attendances and 4/8/12-hour breaches, by site, from February 2015 |
 | `data/metadata.json` | When each file last changed, its latest period, and row counts |
 
-The data is published by
-[NHS England](https://www.england.nhs.uk/statistics/statistical-work-areas/ae-waiting-times-and-activity/)
-and [Public Health Scotland](https://www.opendata.nhs.scot/dataset/weekly-accident-and-emergency-activity-and-waiting-times),
-and collected with [nhsAEscraper](https://github.com/HorridTom/nhsAEscraper).
+The data is collected with [nhsAEscraper](https://github.com/HorridTom/nhsAEscraper).
+
+## Sources and licence
+
+- England: NHS England,
+  [A&E Attendances and Emergency Admissions](https://www.england.nhs.uk/statistics/statistical-work-areas/ae-waiting-times-and-activity/)
+  (monthly provider-level data).
+- Scotland: Public Health Scotland,
+  [Weekly A&E Activity and Waiting Times](https://www.opendata.nhs.scot/dataset/weekly-accident-and-emergency-activity-and-waiting-times).
+
+Contains public sector information licensed under the
+[Open Government Licence v3.0](https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/).
+
+The data has been processed (reshaped, combined and checked; see the notes
+below) and is not an official publication of NHS England or Public Health
+Scotland.
 
 ## How it is kept up to date
 
