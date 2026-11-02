@@ -9,6 +9,6 @@ Encoding: UTF-8
 Imports:
     dplyr,
     jsonlite,
-    nhsAEscraper (>= 0.0.0.9017),
+    nhsAEscraper (>= 0.0.0.9018),
     readr
 Remotes: HorridTom/nhsAEscraper

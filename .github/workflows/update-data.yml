@@ -29,12 +29,6 @@ jobs:
         with:
           cache-version: 1
 
-      # Temporary: checks reading the NHS England index pages through the
-      # WordPress API, because the pages themselves return an empty "202" (a
-      # bot check) to GitHub's servers. Remove once fixed.
-      - name: Check access to NHS England pages
-        run: Rscript dev/check_wp_api.R
-
       - name: Scrape and check the data
         run: Rscript update.R
 
